@@ -2,11 +2,11 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from "yup"
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Signup = () => {
 
-  const url = "http://localhost:7777/signup"
+  const url = "http://localhost:8080/signup"
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -191,9 +191,9 @@ const Signup = () => {
           <div className="bg-surface-2 px-8 py-6 border-t border-default">
             <p className="text-center text-sm text-muted">
               Already have an account?{' '}
-              <a href="#" className="font-medium text-accent hover:opacity-90 transition duration-200">
+              <Link to="/signin" className="font-medium text-accent hover:opacity-90 transition duration-200">
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </div>

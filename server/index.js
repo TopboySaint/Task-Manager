@@ -8,23 +8,30 @@ app.use(express.json());
 const cors = require('cors') 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-app.use(cors())
 
-const connection = mongoose.connect(uri)
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+        'https://task-manager-frontend-react-iota.vercel.app'
+    ],
+    credentials: true,
+}))
+
+const saltRounds =  10;
+
+
+mongoose.connect(uri)
 .then(()=>{
-    console.log('Connected to MongoDb');
+    console.log('Connected to Mongo Database');
 
 })
 .catch((error)=>{
     console.log('Error connecting to Database', error);
 })
 
-app.use(cors({
-    origin: ['https://task-manager-frontend-react-iota.vercel.app/tasks'],
-    credentials: true,
-  }));
 
-const saltRounds =  10;
 
 
 
@@ -44,7 +51,7 @@ const authenticateToken = (req, res, next) =>{
         }
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
         if (err){
-           return res.status(401).json({message: "Invalid token"})
+        return res.status(401).json({message: "Invalid token"})
         }
         req.user = decoded
         next()
@@ -54,13 +61,13 @@ const authenticateToken = (req, res, next) =>{
 
 app.post('/signup', async(req, res)=>{
     const { username, email, password } = req.body
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
     try {
+        const hashedPassword = await bcrypt.hash(password, saltRounds)
         const newUser = new userModel({username, email, password: hashedPassword})
         const savedUser = await newUser.save()
         res.status(201).json({message: "Signup succesful", savedUser}) 
     } catch (error) {
-       res.status(401).json({message: "Error signup", error}) 
+    res.status(401).json({message: "Error signup", error}) 
     }
 })
 
@@ -70,7 +77,6 @@ app.post('/signin', async(req, res)=>{
         email: req.body.email,
         password: req.body.password
     }
-    // console.log(userData);
     const user = await userModel.findOne({email: userData.email})
     if (!user || user == null){
         res.status(404).json({message: "User not found"})
@@ -78,7 +84,7 @@ app.post('/signin', async(req, res)=>{
         const isMatch = await bcrypt.compare(userData.password, user.password)
         if(isMatch){
             const payload = { id: user._id, username: user.username };
-            jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '10m'}, (err, token)=>{
+            jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1h'}, (err, token)=>{
             if(err){
                 res.status(500).json({message:"Error generating token"})
             } else{
@@ -87,7 +93,7 @@ app.post('/signin', async(req, res)=>{
             }
         })
         } else{
-             res.status(401).json({message: "Invalid Password"})         
+            res.status(401).json({message: "Invalid Password"})         
         }
         console.log("User Found", user);  
     }
@@ -170,12 +176,9 @@ app.get('/task', authenticateToken, async(req, res)=>{
 
     })
 
-    
-
-
 
 
 app.listen(port, ()=>{
-    console.log(`${port} is connected`);
+    console.log(`${port} is connected, let's go !`);
     
 })
