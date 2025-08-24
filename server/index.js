@@ -59,6 +59,10 @@ const authenticateToken = (req, res, next) =>{
         })
     }
 
+app.get('/', (req, res)=>{
+    res.status(200).json({message: `success`})
+})
+
 app.post('/signup', async(req, res)=>{
     const { username, email, password } = req.body
     try {
@@ -107,16 +111,15 @@ app.post('/signin', async(req, res)=>{
 const taskSchema = new mongoose.Schema({
     taskName:{type: String, required: true},
     taskDescription: {type: String, required: true},
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // added to link user to specific id
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 },
 { timestamps: true })
 
 const taskModel = mongoose.model('Task Manager', taskSchema)
 
-app.post('/task', authenticateToken, async(req, res)=>{
+app.post('/tasks', authenticateToken, async(req, res)=>{
     const {taskName, taskDescription} = req.body
     const userId = req.user.id;
-    // console.log(res);
     try{
         const userTask = new taskModel({taskName, taskDescription, userId})
         const savedTask = await userTask.save()
@@ -131,11 +134,9 @@ app.post('/task', authenticateToken, async(req, res)=>{
     
 })
 
-app.get('/task', authenticateToken, async(req, res)=>{
-    
+app.get('/tasks', authenticateToken, async(req, res)=>{
     taskModel.find({ userId: req.user.id })
     .then((everyTasks)=>{
-    // const everyTasks = response
     console.log(everyTasks);
     res.status(200).json({message: "All Tasks found", everyTasks})
     })
@@ -146,7 +147,7 @@ app.get('/task', authenticateToken, async(req, res)=>{
 })
 
 
-    app.delete('/task/:id', authenticateToken, (req, res)=>{
+    app.delete('/tasks/:id', authenticateToken, (req, res)=>{
         const { id } = req.params
         const userId = req.user.id; // Get current user ID
         taskModel.findOneAndDelete({ _id: id, userId: userId })
@@ -159,7 +160,7 @@ app.get('/task', authenticateToken, async(req, res)=>{
         })
     })
 
-    app.put('/task/:id', authenticateToken, async(req, res)=>{
+    app.put('/tasks/:id', authenticateToken, async(req, res)=>{
         const { id } = req.params
         const { taskName, taskDescription } = req.body
         const userId = req.user.id; // Get current user ID

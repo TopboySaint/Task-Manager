@@ -17,7 +17,7 @@ const Tasks = () => {
     const [editTaskDescription, seteditTaskDescription] = useState('')
     const [username, setUsername] = useState('')
 
-    const url = "https://task-manager-l5bz.onrender.com/task"
+    const url = "http://localhost:8080/tasks"
     const token = localStorage.getItem('token')
 
     // Load tasks when component mounts
@@ -32,7 +32,8 @@ const Tasks = () => {
             const decoded = jwtDecode(token)
             console.log(decoded);
             setUsername(decoded.username)
-          } catch (error) {
+          } 
+          catch (error) {
             console.log(error);
             localStorage.removeItem('token');
             navigate('/signin');
@@ -47,7 +48,7 @@ const Tasks = () => {
             //     console.log(savedTasks);
             //     setallTasks(savedTasks)
             // }           
-         .catch ((err)=> {
+        .catch ((err)=> {
             console.log("Error loading tasks", err);
             if (err.response?.status === 403 || err.response?.status === 401) {
             localStorage.removeItem('token');
@@ -56,7 +57,6 @@ const Tasks = () => {
     });
   },[navigate, token])
 
-    // Save whenever tasks change
     
     const addTask = () =>{
       const task = {
@@ -77,8 +77,7 @@ const Tasks = () => {
       settaskDescription('');
     }
     })
-     .catch((err) => {
-        // It's important to catch and log errors
+    .catch((err) => {
         console.error("Error adding task:", err);
         if (err.response?.status === 403 || err.response?.status === 401) {
           localStorage.removeItem('token');
