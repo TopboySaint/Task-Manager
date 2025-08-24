@@ -20,7 +20,6 @@ const Tasks = () => {
     const url = "http://localhost:8080/tasks"
     const token = localStorage.getItem('token')
 
-    // Load tasks when component mounts
     useEffect(()=>{
       if(!token){
             navigate('/signin')
@@ -43,11 +42,6 @@ const Tasks = () => {
           .then((response)=>{
             setallTasks(response.data.everyTasks || [])
           })
-            // const savedTasks = JSON.parse(localStorage.getItem('listedTasks'))
-            // if (savedTasks && savedTasks.length > 0){
-            //     console.log(savedTasks);
-            //     setallTasks(savedTasks)
-            // }           
         .catch ((err)=> {
             console.log("Error loading tasks", err);
             if (err.response?.status === 403 || err.response?.status === 401) {
@@ -88,8 +82,6 @@ const Tasks = () => {
   }
 
   const openEditModal = (task) =>{
-    // const taskToEdit = allTasks[index]
-    // seteditTaskId(index)
     seteditTaskId(task._id)
     seteditTaskName(task.taskName)
     seteditTaskDescription(task.taskDescription)
@@ -104,7 +96,7 @@ const Tasks = () => {
   }
 
   const saveEditedTask = async ()=>{
-    if (!editTaskName.trim()) //  do nothing if there is no edited task
+    if (!editTaskName.trim()) 
     return;
     try {
       const response = await axios.put(`${url}/${editTaskId}`, {
@@ -115,8 +107,7 @@ const Tasks = () => {
       const updatedEditedTasks = allTasks.map((task) => 
         task._id === editTaskId ? updatedTaskFromServer : task
       )
-    setallTasks(updatedEditedTasks)  // Update the main task list
-    closeModal() 
+    setallTasks(updatedEditedTasks)  
     console.log(response);
     
     } catch (error) {
@@ -129,19 +120,24 @@ const Tasks = () => {
   }
 
   const deleteTask = (taskId) =>{
-    axios.delete(`${url}/${taskId}`, { headers: { Authorization: `Bearer ${token}` } })
-    .then((response)=>{
-      console.log("Task deleted", response.data);
-      const updatedTasks = allTasks.filter(task => task._id !==taskId);
-      setallTasks(updatedTasks)
-    })
-    .catch((err) => {
-        console.error("Error deleting task:", err);
-        if (err.response?.status === 403 || err.response?.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/signin');
-        }
-      });
+    const confirmed = window.confirm('Are you sure ?')
+    if(confirmed){
+      axios.delete(`${url}/${taskId}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((response)=>{
+        console.log("Task deleted", response.data);
+        const updatedTasks = allTasks.filter(task => task._id !==taskId);
+        setallTasks(updatedTasks)
+      })
+      .catch((err) => {
+          console.error("Error deleting task:", err);
+          if (err.response?.status === 403 || err.response?.status === 401) {
+            localStorage.removeItem('token');
+            navigate('/signin');
+          }
+        });
+    }else{
+      return;
+    }
   }
   
   const getTimeAgo = (timestamp)=>{
@@ -161,131 +157,165 @@ const Tasks = () => {
 
     }
 
+    const logout = () => {
+      const confirmation = window.confirm('Are you sure you want to logout?')
+      if(confirmation){
+        localStorage.removeItem('token')
+        navigate('/signin', { replace: true })
+      }else{
+        return;
+      } 
+    }
+
   return (
     <>
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-10 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <h1 className='text-3xl font-bold text-center text-indigo-800 mb-8 tracking-tight'>Welcome, {username} ! To Your Task Manager</h1>
+    <div className="min-h-screen bg-surface-2 py-8 px-4 sm:px-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Top Bar with Logo + Logout */}
+        <header className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-brand-contrast" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <span className="text-xl font-bold text-text">TaskMint</span>
+          </div>
+          <button type="button" className="btn btn-neutral btn-md" onClick={logout}>Logout</button>
+        </header>
+
+        {/* Welcome heading */}
+        <div className="card p-6">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-text">Welcome, {username}</h1>
+          <p className="text-muted mt-1">Plan it. Do it. Done.</p>
+        </div>
+
         {/* Task Input Area */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <input 
-            type="text" 
-            name='taskName' 
-            value={taskName} 
-            onChange={(e)=>settaskName(e.target.value)}
-            placeholder="Task name"
-            className="w-full mb-3 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-          />
-          <textarea 
-            name="taskDescription" 
-            value={taskDescription} 
-            onChange={(e)=>settaskDescription(e.target.value)}
-            placeholder="Task description"
-            className="w-full mb-5 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all h-24 resize-none"
-          />
-          <button 
-            onClick={()=>addTask()}
-            disabled={!taskName.trim()}
-            className={`w-full py-3 rounded-lg text-white font-medium transition-all ${
-              taskName.trim() 
-                ? 'bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg' 
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Add Task
-          </button>
+        <div className="card p-6">
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="taskName" className="block text-sm font-medium text-text mb-1">Task name</label>
+              <input
+                id="taskName"
+                type="text"
+                name='taskName'
+                value={taskName}
+                onChange={(e)=>settaskName(e.target.value)}
+                placeholder="e.g., Prepare project brief"
+                className="block w-full px-4 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200"
+              />
+            </div>
+            <div>
+              <label htmlFor="taskDescription" className="block text-sm font-medium text-text mb-1">Description</label>
+              <textarea
+                id="taskDescription"
+                name="taskDescription"
+                value={taskDescription}
+                onChange={(e)=>settaskDescription(e.target.value)}
+                placeholder="Add helpful details..."
+                className="block w-full px-4 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200 h-24 resize-none"
+              />
+            </div>
+            <div>
+              <button
+                onClick={()=>addTask()}
+                disabled={!taskName.trim()}
+                className={`w-full btn btn-primary btn-md ${!taskName.trim() ? 'opacity-60 cursor-not-allowed' : ''}`}
+              >
+                Add Task
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Tasks List */}
-        <div className="space-y-4">
-          {
-            allTasks.length > 0 ? (
-              allTasks.map((task)=>(
-                <div key={task._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all p-5 border-l-4 border-indigo-500">
-                  <h4 className="text-xl font-semibold text-gray-800 mb-2">{task.taskName}</h4>
-                  <p className="text-gray-600 mb-4">{task.taskDescription}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 italic">Added {getTimeAgo(task.createdAt)}</span>
-                    <div className="space-x-2">
-                      <button 
-                        onClick={()=>openEditModal(task)}
-                        className="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md transition-colors font-medium text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        onClick={()=>deleteTask(task._id)}
-                        className="px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md transition-colors font-medium text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
+        <div className="space-y-3">
+          {allTasks.length > 0 ? (
+            allTasks.map((task) => (
+              <div key={task._id} className="card p-5 border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
+                <h4 className="text-lg md:text-xl font-semibold text-text mb-1">{task.taskName}</h4>
+                <p className="text-muted mb-4">{task.taskDescription}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted italic">Added {getTimeAgo(task.createdAt)}</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={()=>openEditModal(task)}
+                      className="btn btn-neutral btn-md"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={()=>deleteTask(task._id)}
+                      className="btn btn-md"
+                      style={{ backgroundColor: '#fee2e2', color: '#991b1b' }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-10 text-gray-500">
-                <p className="text-lg">No tasks yet! Add one to get started.</p>
               </div>
-            )
-          }
+            ))
+          ) : (
+            <div className="card p-8 text-center">
+              <p className="text-text">No tasks yet! Add one to get started.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
 
     {/* Edit Task Modal */}
-        {isModalOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all">
-                    <div className="flex justify-between items-center p-6 border-b border-indigo-100">
-                        <h3 className="text-xl font-semibold text-indigo-800">Edit Task</h3>
-                        <button 
-                            onClick={closeModal} 
-                            className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 h-8 w-8 rounded-full flex items-center justify-center transition-colors"
-                        >
-                            <span className="sr-only">Close</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
+    {isModalOpen && (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="card w-full max-w-md">
+          <div className="flex justify-between items-center p-6 border-b border-default">
+            <h3 className="text-xl font-semibold text-text">Edit Task</h3>
+            <button 
+              onClick={closeModal} 
+              className="text-muted hover:bg-surface-2 h-8 w-8 rounded-full flex items-center justify-center transition-colors"
+            >
+              <span className="sr-only">Close</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
                     
-                    <div className="p-6">
-                        <input 
-                            type="text" 
-                            value={editTaskName}
-                            onChange={(e) => seteditTaskName(e.target.value)}
-                            placeholder="Task name"
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                        />
-                        <textarea 
-                            value={editTaskDescription}
-                            onChange={(e) => seteditTaskDescription(e.target.value)}
-                            placeholder="Task description"
-                            rows="4"
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
-                        />
+          <div className="p-6">
+            <input 
+              type="text" 
+              value={editTaskName}
+              onChange={(e) => seteditTaskName(e.target.value)}
+              placeholder="Task name"
+              className="w-full px-4 py-3 border border-default rounded-lg mb-4 bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition"
+            />
+            <textarea 
+              value={editTaskDescription}
+              onChange={(e) => seteditTaskDescription(e.target.value)}
+              placeholder="Task description"
+              rows="4"
+              className="w-full px-4 py-3 border border-default rounded-lg mb-6 bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition resize-none"
+            />
                         
-                        <div className="flex space-x-3">
-                            <button 
-                                onClick={saveEditedTask} 
-                                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                disabled={!editTaskName.trim()}
-                            >
-                                Save Changes
-                            </button>
-                            <button 
-                                onClick={closeModal} 
-                                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-4 rounded-lg transition-colors"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="flex gap-3">
+              <button 
+                onClick={saveEditedTask} 
+                className={`flex-1 btn btn-primary btn-md ${!editTaskName.trim() ? 'opacity-60 cursor-not-allowed' : ''}`}
+                disabled={!editTaskName.trim()}
+              >
+                Save Changes
+              </button>
+              <button 
+                onClick={closeModal} 
+                className="flex-1 btn btn-neutral btn-md"
+              >
+                Cancel
+              </button>
             </div>
-        )}
+          </div>
+        </div>
+      </div>
+    )}
     
     </>
   )
