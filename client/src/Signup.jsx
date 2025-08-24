@@ -43,32 +43,34 @@ const Signup = () => {
 
   return (
     <>
-    <form action="" onSubmit={formik.handleSubmit}>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4">
+    <form action="" onSubmit={formik.handleSubmit} className="min-h-screen bg-surface-2 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-10">
-          <div className="mx-auto w-20 h-20 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-            </svg>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-brand-contrast" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <span className="text-2xl font-bold text-text">TaskMint</span>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800">Create Account</h1>
-          <p className="text-gray-600 mt-2">Let us help you manage your tasks today</p>
+          <h1 className="text-3xl font-extrabold text-text">Create Account</h1>
+          <p className="text-muted mt-2">Let us help you manage your tasks today</p>
         </div>
 
         {/* Signup Card */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-          <div className="p-8">
+        <div className="card overflow-hidden">
+          <div className="p-6 md:p-8">
             <div className="space-y-6">
               {/* Name Input */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-text mb-1">
                   Username
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -79,7 +81,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                     type="text"
                     autoComplete="name"
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                    className="block w-full pl-10 pr-3 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200"
                     placeholder="Username"
                   />
                   {
@@ -91,12 +93,12 @@ const Signup = () => {
 
               {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-text mb-1">
                   Email Address
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
@@ -108,7 +110,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                     type="email"
                     autoComplete="email"
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+          className="block w-full pl-10 pr-3 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200"
                     placeholder="you@example.com"
                   />
                   {
@@ -120,12 +122,12 @@ const Signup = () => {
 
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-text mb-1">
                   Password
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -136,7 +138,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                     type="password"
                     autoComplete="new-password"
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+          className="block w-full pl-10 pr-3 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200"
                     placeholder="••••••••"
                   />
                   {
@@ -148,12 +150,12 @@ const Signup = () => {
 
               {/* Confirm Password Input */}
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="confirm-password" className="block text-sm font-medium text-text mb-1">
                   Confirm Password
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -164,7 +166,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                     type="password"
                     autoComplete="new-password"
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                    className="block w-full pl-10 pr-3 py-3 border border-default rounded-lg bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] focus:border-transparent transition duration-200"
                     placeholder="•••••••"
                   />
                   {
@@ -177,7 +179,7 @@ const Signup = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-200 transform hover:-translate-y-0.5"
+                  className="w-full btn btn-primary btn-md"
                 >
                   Create Account
                 </button>
@@ -186,10 +188,10 @@ const Signup = () => {
           </div>
 
           {/* Login Link */}
-          <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
-            <p className="text-center text-sm text-gray-600">
+          <div className="bg-surface-2 px-8 py-6 border-t border-default">
+            <p className="text-center text-sm text-muted">
               Already have an account?{' '}
-              <a href="#" className="font-medium text-purple-600 hover:text-purple-500 transition duration-200">
+              <a href="#" className="font-medium text-accent hover:opacity-90 transition duration-200">
                 Sign in
               </a>
             </p>
@@ -197,12 +199,11 @@ const Signup = () => {
         </div>
 
         {/* Footer */}
-        <p className="mt-8 text-center text-xs text-gray-500">
-          © 2023 Company Name. All rights reserved.
+        <p className="mt-8 text-center text-xs text-muted">
+          © 2023 TaskMint. All rights reserved.
         </p>
       </div>
-    </div>  
-    </form>  
+    </form>
     </>
   )
 }
