@@ -29,7 +29,7 @@ const Tasks = () => {
           // Decode  to get the username
           try {
             const decoded = jwtDecode(token)
-            console.log(decoded);
+            // console.log(decoded);
             setUsername(decoded.username)
           } 
           catch (error) {
@@ -66,7 +66,7 @@ const Tasks = () => {
     .then((response)=>{
       if (response.status === 201) {
       setallTasks([...allTasks, response.data.savedTask])
-      console.log(allTasks);
+      // console.log(allTasks);
       settaskName('');
       settaskDescription('');
     }
@@ -108,7 +108,7 @@ const Tasks = () => {
         task._id === editTaskId ? updatedTaskFromServer : task
       )
     setallTasks(updatedEditedTasks)  
-    console.log(response);
+    // console.log(response);
     
     } catch (error) {
       console.log(error);

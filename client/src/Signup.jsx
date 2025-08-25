@@ -24,10 +24,10 @@ const Signup = () => {
     }),
 
     onSubmit:(values)=>{
-      console.log(values);
+      // console.log(values);
       axios.post(url, values)
       .then((response)=>{
-        console.log(response.data);
+        // console.log(response.data);
         if(response.status === 201){
           navigate("/signin")
         }
