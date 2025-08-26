@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
+import api from "./api";
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'
 
@@ -17,7 +17,6 @@ const Tasks = () => {
     const [editTaskDescription, seteditTaskDescription] = useState('')
     const [username, setUsername] = useState('')
 
-    const url = "http://localhost:8080/tasks"
     const token = localStorage.getItem('token')
 
     useEffect(()=>{
@@ -38,7 +37,7 @@ const Tasks = () => {
             navigate('/signin');
           }
 
-          axios.get(url, {headers: { Authorization: `Bearer ${token}` }})
+          api.get('/tasks', {headers: { Authorization: `Bearer ${token}` }})
           .then((response)=>{
             setallTasks(response.data.everyTasks || [])
           })
@@ -62,7 +61,7 @@ const Tasks = () => {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
       };
-    axios.post(url, task, config)
+  api.post('/tasks', task, config)
     .then((response)=>{
       if (response.status === 201) {
       setallTasks([...allTasks, response.data.savedTask])
@@ -99,7 +98,7 @@ const Tasks = () => {
     if (!editTaskName.trim()) 
     return;
     try {
-      const response = await axios.put(`${url}/${editTaskId}`, {
+      const response = await api.put(`/tasks/${editTaskId}`, {
         taskName: editTaskName,
         taskDescription: editTaskDescription, 
       }, { headers: { Authorization: `Bearer ${token}` } })
@@ -122,7 +121,7 @@ const Tasks = () => {
   const deleteTask = (taskId) =>{
     const confirmed = window.confirm('Are you sure ?')
     if(confirmed){
-      axios.delete(`${url}/${taskId}`, { headers: { Authorization: `Bearer ${token}` } })
+  api.delete(`/tasks/${taskId}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((response)=>{
         console.log("Task deleted", response.data);
         const updatedTasks = allTasks.filter(task => task._id !==taskId);

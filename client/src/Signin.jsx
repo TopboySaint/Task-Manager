@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import axios from 'axios'
+import api from './api'
 import { useNavigate, Link } from 'react-router-dom'
 
 const Signin = () => {
   const [error, setError] = useState('')
-  const url = 'http://localhost:8080/signin'
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -20,7 +19,7 @@ const Signin = () => {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setError('')
-      axios.post(url, values)
+  api.post('/signin', values)
         .then((response) => {
           if (response.data.token) {
             localStorage.setItem('token', response.data.token)

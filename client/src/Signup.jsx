@@ -1,12 +1,11 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from "yup"
-import axios from 'axios'
+import api from './api'
 import { useNavigate, Link } from 'react-router-dom'
 
 const Signup = () => {
 
-  const url = "http://localhost:8080/signup"
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -25,7 +24,7 @@ const Signup = () => {
 
     onSubmit:(values)=>{
       // console.log(values);
-      axios.post(url, values)
+  api.post('/signup', values)
       .then((response)=>{
         // console.log(response.data);
         if(response.status === 201){
