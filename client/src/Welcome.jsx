@@ -43,7 +43,7 @@ const Welcome = () => {
               </div>
               <span className="text-2xl font-bold">TaskMint</span>
             </div>
-            <Link to="/signup"><button className="btn btn-neutral btn-md">
+            <Link to="/signin"><button className="btn btn-neutral btn-md">
               Sign in
             </button></Link>
           </nav>
