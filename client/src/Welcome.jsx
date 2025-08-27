@@ -55,11 +55,11 @@ const Welcome = () => {
         <div className="container mx-auto max-w-3xl flex flex-col items-center justify-center min-h-[40vh]">
           <div className="text-center">
       <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight">
-              Task Management for Individuals
+              Task Manager for Individuals
             </h1>
       <p className="text-lg md:text-xl text-muted max-w-xl mx-auto mb-8">
-              TaskMint empowers you to streamline workflows, enhance collaboration, and achieve your goals with clarity and confidence. Experience seamless organization and take control of your productivity with our intuitive, business-ready platform.
-            </p>
+              TaskMint empowers you to streamline workflows, enhance collaboration, and achieve your goals with clarity and confidence.
+              </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
               <Link to="/signup">
         <button className="btn btn-primary btn-lg">
