@@ -127,10 +127,17 @@ const Signin = () => {
                 disabled={formik.isSubmitting}
                 className="w-full btn btn-primary btn-md flex items-center justify-center gap-3"
               >
-                <svg className="h-5 w-5 text-brand-contrast/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-                <span>Sign in</span>
+                {formik.isSubmitting ? (
+                  <svg className="animate-spin h-5 w-5 text-brand-contrast/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5 text-brand-contrast/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                )}
+                <span>{formik.isSubmitting ? 'Signing in...' : 'Sign in'}</span>
               </button>
             </div>
           </form>
