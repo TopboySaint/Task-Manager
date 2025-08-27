@@ -97,9 +97,6 @@ const Welcome = () => {
                   </li>
                 ))}
               </ul>
-              <button className="btn btn-primary btn-md">
-                Explore All Features
-              </button>
             </div>
           </div>
         </div>
