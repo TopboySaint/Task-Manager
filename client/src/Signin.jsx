@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import api from './api'
@@ -58,8 +58,11 @@ const Signin = () => {
           </div>
 
           {error && (
-            <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="mb-4">
+              <div className="flex items-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <svg className="fill-current w-5 h-5 mr-2 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M18.364 17.657A9 9 0 1 1 17.657 1.636a9 9 0 0 1 .707 16.02zm-7.07-1.415A7 7 0 1 0 3.757 3.757a7 7 0 0 0 7.536 12.485zm-.293-3.535a1 1 0 0 1-1.414 0l-1.414-1.414a1 1 0 0 1 1.414-1.414l.707.707.707-.707a1 1 0 0 1 1.414 1.414l-1.414 1.414z"/></svg>
+                <span className="block flex-1">{error}</span>
+              </div>
             </div>
           )}
 

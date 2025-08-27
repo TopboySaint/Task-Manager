@@ -37,7 +37,7 @@ mongoose.connect(uri)
 
 const userSchema = new mongoose.Schema({
     username:{type: String, required: true},
-    email:{type: String, required: true},
+    email:{type: String, required: true, unique: true},
     password:{type: String, required: true}
 })
 
@@ -63,17 +63,21 @@ app.get('/', (req, res)=>{
     res.status(200).json({message: `success`})
 })
 
-app.post('/signup', async(req, res)=>{
-    const { username, email, password } = req.body
+app.post('/signup', async (req, res) => {
+    const { username, email, password } = req.body;
     try {
-        const hashedPassword = await bcrypt.hash(password, saltRounds)
-        const newUser = new userModel({username, email, password: hashedPassword})
-        const savedUser = await newUser.save()
-        res.status(201).json({message: "Signup succesful", savedUser}) 
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const newUser = new userModel({ username, email, password: hashedPassword });
+        const savedUser = await newUser.save();
+        res.status(201).json({ message: "Signup successful", savedUser });
     } catch (error) {
-    res.status(401).json({message: "Error signup", error}) 
+        res.status(500).json({ message: "Error signup", error });
     }
-})
+});
 
 app.post('/signin', async(req, res)=>{
     try {

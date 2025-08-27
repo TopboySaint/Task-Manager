@@ -1,40 +1,41 @@
-import React from 'react'
+import {useState} from 'react'
 import { useFormik } from 'formik'
 import * as Yup from "yup"
 import api from './api'
 import { useNavigate, Link } from 'react-router-dom'
 
-const Signup = () => {
 
+const Signup = () => {
   const navigate = useNavigate()
+  const [error, setError] = useState("")
 
   const formik = useFormik({
     initialValues: {
       username: "",
       email: "",
       password: "",
-      confirmPassword:""
+      confirmPassword: ""
     },
     validationSchema: Yup.object({
       username: Yup.string().required("Username is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string().min(6, "password must not be less than 6 characters").required("Password is required"),
-      confirmPassword: Yup.string().oneOf([Yup.ref("password"), null],"Password must match").required("Confirm your password")
+      confirmPassword: Yup.string().oneOf([Yup.ref("password"), null], "Password must match").required("Confirm your password")
     }),
-
-    onSubmit:(values)=>{
-      // console.log(values);
-  api.post('/signup', values)
-      .then((response)=>{
-        // console.log(response.data);
-        if(response.status === 201){
-          navigate("/signin")
-        }
-      })
+    onSubmit: (values) => {
+      setError("");
+      api.post('/signup', values)
+        .then((response) => {
+          if (response.status === 201) {
+            navigate("/signin")
+          }
+        })
+        .catch((err) => {
+          const msg = err.response?.data?.message || "Signup failed. Please try again."
+          setError(msg)
+        })
     }
-    
   })
-  // console.log(formik.errors);
 
 
 
@@ -42,7 +43,7 @@ const Signup = () => {
 
   return (
     <>
-    <form action="" onSubmit={formik.handleSubmit} className="min-h-screen bg-surface-2 flex items-center justify-center p-4">
+  <form action="" onSubmit={formik.handleSubmit} className="min-h-screen bg-surface-2 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-10">
@@ -61,6 +62,16 @@ const Signup = () => {
         {/* Signup Card */}
         <div className="card overflow-hidden">
           <div className="p-6 md:p-8">
+            {/* Show error alert if present */}
+            {error && (
+              <div className="mb-4">
+                <div className="flex items-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                  <svg className="fill-current w-5 h-5 mr-2 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M18.364 17.657A9 9 0 1 1 17.657 1.636a9 9 0 0 1 .707 16.02zm-7.07-1.415A7 7 0 1 0 3.757 3.757a7 7 0 0 0 7.536 12.485zm-.293-3.535a1 1 0 0 1-1.414 0l-1.414-1.414a1 1 0 0 1 1.414-1.414l.707.707.707-.707a1 1 0 0 1 1.414 1.414l-1.414 1.414z"/></svg>
+                  <span className="block flex-1">{error}</span>
+                </div>
+              </div>
+            )}
+            {/* Name Input */}
             <div className="space-y-6">
               {/* Name Input */}
               <div>
@@ -199,7 +210,7 @@ const Signup = () => {
 
         {/* Footer */}
         <p className="mt-8 text-center text-xs text-muted">
-          © 2023 TaskMint. All rights reserved.
+          © 2025 TaskMint. All rights reserved.
         </p>
       </div>
     </form>

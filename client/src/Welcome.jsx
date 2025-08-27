@@ -122,7 +122,7 @@ const Welcome = () => {
       {/* Footer */}
   <footer className="bg-brand text-brand-contrast pt-8 pb-8">
     <div className="text-center text-brand-contrast opacity-70">
-      <p>&copy; 2023 TaskMint. All rights reserved.</p>
+      <p>&copy; 2025 TaskMint. All rights reserved.</p>
     </div>
   </footer>
     </div>
