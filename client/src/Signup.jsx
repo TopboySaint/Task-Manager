@@ -26,7 +26,7 @@ const Signup = () => {
     onSubmit: (values) => {
       setError("");
       setLoading(true);
-      api.post('/signup', values)
+      api.post('/users/signup', values)
         .then((response) => {
           if (response.status === 201) {
             navigate("/signin")

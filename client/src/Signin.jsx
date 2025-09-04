@@ -19,7 +19,7 @@ const Signin = () => {
     }),
     onSubmit: (values, { setSubmitting }) => {
       setError('')
-  api.post('/signin', values)
+  api.post('/users/signin', values)
         .then((response) => {
           if (response.data.token) {
             localStorage.setItem('token', response.data.token)
